@@ -8,6 +8,7 @@ Small really basic flask API
 python3 -m venv dev
 source dev/bin/activate
 pip3 install requirements.txt
+docker run --name localmongo -p 27017:27017 -d mongo
 ```
 
 ## Usage
