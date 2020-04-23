@@ -1,59 +1,40 @@
 from flask import Flask, jsonify, request
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
-
-# TODO improve with a database integration
-
-recipes = {
-    "Steak and french fries" : 
-    {
-        "description": "The Shawshank Redemption",
-        "ingredients": [ 
-           {
-               "name": "steak",
-               "quantity": "1kg"
-           },
-           {
-               "name": "french fries",
-               "quantity": "150g"
-           }
-       ]
-    },
-    "Pizza" : 
-    {
-       "description": "The Godfather ",
-       "ingredients": [ 
-           {
-               "name": "cheese",
-               "quantity": "150g"
-           },
-           {
-               "name": "tomato",
-               "quantity": "150g"
-           }
-       ]
-    }
-}
+app.config["MONGO_URI"] = "mongodb://localhost:27017/recipes"
+mongo = PyMongo(app)
+collection = mongo.db.recipe
 
 @app.route('/recipes')
 def get_all_recipes():
-    return jsonify(recipes)
+    try:
+        if collection.find().count() > 0:
+            recipes_list = []
+            for obj in collection.find():
+                obj.pop('_id') # id object is not jsonify so we pop it out
+                recipes_list.append(obj)
+            return jsonify(recipes_list)
+        else:
+            return jsonify([])
+    except:
+        return "", 500
 
 @app.route('/recipes', methods=['POST'])
 def add_recipe():
     recipe = request.get_json()
-    recipes[recipe["key"]["title"]] = recipe["recipe"]
-    return {'id': len(recipes)}, 200
+    collection.insert(recipe)
+    return {}, 200
 
 @app.route('/recipes/<string:title>', methods=['PUT'])
 def update_recipe(title):
     recipe = request.get_json()
-    recipes[title] = recipe
-    return jsonify(recipes[title]), 200
+    collection.save(recipe)
+    return {}, 200
 
 @app.route('/recipes/<string:title>', methods=['DELETE'])
 def delete_recipe(title):
-    recipes.pop(title)
+    collection.remove({"title": title})
     return 'None', 200
 
 app.run()

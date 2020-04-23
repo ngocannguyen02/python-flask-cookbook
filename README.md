@@ -18,26 +18,22 @@ http://localhost:5000/recipes
 ### POST
 ```json
 {
-	"key": {
-		"title": "Sandwich"
-	},
-	"recipe": {
-		"description": "Classical sandwitch ",
-		"ingredients": [ 
-		   {
-		       "name": "cheese",
-		       "quantity": "5g0"
-		   },
-		   {
-		       "name": "bread",
-		       "quantity": "150g"
-		   },
-		   {
-		       "name": "ham",
-		       "quantity": "50g"
-		   }
-		]
-	}
+	"title": "Sandwich",
+	"description": "Classical sandwitch ",
+	"ingredients": [ 
+	   {
+	       "name": "cheese",
+	       "quantity": "5g0"
+	   },
+	   {
+	       "name": "bread",
+	       "quantity": "150g"
+	   },
+	   {
+	       "name": "ham",
+	       "quantity": "50g"
+	   }
+	]
 }
 ```
 
